@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Email Automator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+            margin-top: 14px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 16px;
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-primary:disabled,
+        .btn-success:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-msg {
+            font-size: 13px;
+            margin-top: 10px;
+            min-height: 20px;
+            color: #27ae60;
+        }
+
+        .log-box {
+            background: #1e1e1e;
+            color: #a8ff78;
+            font-family: monospace;
+            font-size: 12px;
+            padding: 16px;
+            border-radius: 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            line-height: 1.8;
+        }
+
+        .log-box p {
+            margin: 0;
+        }
+
+        .empty-log {
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>⚡ AI Email Automator</h1>
+        <p class="subtitle">
+            Configure, generate and send AI-powered newsletters
+        </p>
+
+        <!-- CONFIG CARD -->
+        <div class="card">
+            <h2>📋 Email Settings</h2>
+
+            <label>Topic</label>
+            <textarea id="topic">{{ config.topic }}</textarea>
+
+            <label>Audience</label>
+            <input type="text" id="audience" value="{{ config.audience }}" />
+
+            <label>Tone</label>
+            <select id="tone">
+                <option {% if config.tone=="Professional" %}selected{% endif %}>
+                    Professional
+                </option>
+                <option {% if config.tone=="Friendly" %}selected{% endif %}>
+                    Friendly
+                </option>
+                <option {% if config.tone=="Casual" %}selected{% endif %}>
+                    Casual
+                </option>
+                <option {% if config.tone=="Urgent" %}selected{% endif %}>
+                    Urgent
+                </option>
+                <option {% if config.tone=="Informative and engaging" %}selected{% endif %}>
+                    Informative and engaging
+                </option>
+            </select>
+
+            <label>Recipients (one per line)</label>
+            <textarea id="recipients">
+{{ config.recipients | join('\n') }}</textarea>
+
+            <button class="btn btn-primary" onclick="saveConfig()">
+                💾 Save Settings
+            </button>
+            <div class="status-msg" id="s ave-status"></div>
+        </div>
+
+        <!-- SEND CARD -->
+        <div class="card">
+            <h2>📬 Send Newsletter</h2>
+            <p style="font-size: 14px; color: #666">
+                Generates a fresh email using your current settings and sends it to
+                all recipients.
+            </p>
+            <button class="btn btn-success" id="send-btn" onclick="sendEmail()">
+                🚀 Generate & Send
+            </button>
+            <div class="status-msg" id="send-status"></div>
+        </div>
+
+        <!-- LOGS CARD -->
+        <div class="card">
+            <h2>📜 Recent Activity</h2>
+            <div class="log-box" id="log-box">
+                <p class="empty-log">Logs will appear here...</p>
+            </div>
+            <button class="btn btn-primary" onclick="loadLogs()" style="margin-top: 12px">
+                🔄 Refresh Logs
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Save settings to config.json via the /save route
+        function saveConfig() {
+            const data = {
+                topic: document.getElementById("topic").value,
+                audience: document.getElementById("audience").value,
+                tone: document.getElementById("tone").value,
+                recipients: document
+                    .getElementById("recipients")
+                    .value.split("\n")
+                    .map((r) => r.trim())
+                    .filter((r) => r),
+            };
+
+            fetch("/save", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            })
+                .then((r) => r.json())
+                .then(() => {
+                    document.getElementById("save-status").textContent =
+                        "✅ Settings saved!";
+                    setTimeout(
+                        () => (document.getElementById("save-status").textContent = ""),
+                        3000,
+                    );
+                });
+        }
+
+        // Trigger email generation and sending via the /send route
+        function sendEmail() {
+            const btn = document.getElementById("send-btn");
+            const status = document.getElementById("send-status");
+            btn.disabled = true;
+            status.textContent =
+                "⏳ Generating and sending... this takes ~10 seconds";
+
+            fetch("/send", { method: "POST" })
+                .then((r) => r.json())
+                .then(() => {
+                    status.textContent = "✅ Email sent! Check your inbox.";
+                    btn.disabled = false;
+                    loadLogs();
+                });
+        }
+
+        // Fetch last 20 log lines from the /logs route and display them
+        function loadLogs() {
+            fetch("/logs")
+                .then((r) => r.json())
+                .then((data) => {
+                    const box = document.getElementById("log-box");
+                    if (data.logs.length === 0) {
+                        box.innerHTML = '<p class="empty-log">No logs yet.</p>';
+                        return;
+                    }
+                    box.innerHTML = data.logs
+                        .map((line) => `<p>${line.trim()}</p>`)
+                        .join("");
+                    box.scrollTop = box.scrollHeight;
+                });
+        }
+
+        // Load logs automatically when page opens
+        loadLogs();
+    </script>
+</body>
+
+</html>

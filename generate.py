@@ -19,17 +19,20 @@ def generate_email(topic, audience, tone):
     - Greeting
     - Body (2-3 paragraphs)
     - Clear Call to Action
-    - Sign Off
+    
 
     Keep it slighly concise but engaging, and make sure to include a detailed overview/description of the topic, and a clear call to action for the audience.
     """
 
-    response = client.models.generate_content(
-        model = "gemini-2.5-flash",
-        contents=prompt
-    )
-    return response.text
+    try:
 
+        response = client.models.generate_content(
+            model = "gemini-2.5-flash",
+            contents=prompt
+        )
+        return response.text
+    except Exception as e:
+        raise RuntimeError(f"Gemini API Failed: {e}")
 
 if __name__ == "__main__":
 

@@ -12,3 +12,27 @@
 2026-04-30 11:00:03,418 - INFO - Subject: ✨ Turn Your Ideas Into Stunning Videos – Meet Luma AI Dream Machine! ✨
 2026-04-30 11:00:04,427 - INFO - Email sent to saltoanthony13@gmail.com
 2026-04-30 11:00:04,427 - INFO - Email automator process completed successfully.
+2026-04-30 11:14:08,404 - INFO - Starting email automator..
+2026-04-30 11:14:08,404 - INFO - Generating email...
+2026-04-30 11:14:08,404 - INFO - AFC is enabled with max remote calls: 10.
+2026-04-30 11:14:15,970 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 503 Service Unavailable"
+2026-04-30 11:14:15,973 - ERROR - Automator process failed: Gemini API Failed: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+2026-04-30 11:15:40,707 - INFO - Starting email automator..
+2026-04-30 11:15:40,708 - INFO - Generating email...
+2026-04-30 11:15:40,708 - INFO - AFC is enabled with max remote calls: 10.
+2026-04-30 11:15:48,656 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 503 Service Unavailable"
+2026-04-30 11:15:48,658 - ERROR - Automator process failed: Gemini API Failed: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+2026-04-30 11:23:57,883 - INFO - Starting email automator..
+2026-04-30 11:23:57,883 - INFO - Generating email...
+2026-04-30 11:23:57,883 - INFO - AFC is enabled with max remote calls: 10.
+2026-04-30 11:24:08,170 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-04-30 11:24:08,174 - INFO - Subject: 🚀 Anthropic Just Launched Claude 3.5 Sonnet – Your New AI Powerhouse!
+2026-04-30 11:24:09,000 - INFO - Email sent to saltoanthony13@gmail.com
+2026-04-30 11:24:09,000 - INFO - Email automator process completed successfully.
+2026-04-30 11:39:10,512 - INFO - Starting email automator..
+2026-04-30 11:39:10,512 - INFO - Generating email...
+2026-04-30 11:39:10,512 - INFO - AFC is enabled with max remote calls: 10.
+2026-04-30 11:39:23,790 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-04-30 11:39:23,795 - INFO - Subject: 🚀 Discover Perplexity Comet: Your New AI-Powered Research Assistant!
+2026-04-30 11:39:24,500 - INFO - Email sent to saltoanthony13@gmail.com
+2026-04-30 11:39:24,500 - INFO - Email automator process completed successfully.

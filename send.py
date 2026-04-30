@@ -19,19 +19,28 @@ def format_html(body):
     
     return f"""
     <html>
-        <body style="font-family: Aria, sans-serif; max-width:600px; margin: 0 auto; padding: 20px; color: #333;">
-            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                <h2 style="color: #2c3e50; margin: 0;">Your Daily AI Newsletter</h2>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
+
+            <div style="background-color: #2c3e50; padding: 24px; border-radius: 8px 8px 0 0;">
+                <h1 style="color: white; margin: 0; font-size: 22px;">Your Daily Newsletter</h1>
             </div>
-            <div style="line-height: 1.8; font-size: 15px;">
-                {html_paragraphs}
+
+            <div style="background: #ffffff; padding: 24px; border: 1px solid #eee; border-top: none; border-radius: 0 0 8px 8px; line-height: 1.8; font-size: 15px;">
+                {body}
             </div>
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eeel; font-size: 12px; color: #999;">
-                <p> You're receiving this email because you are subscribed to this newsletter.</p>
+
+            <div style="margin-top: 20px; font-size: 12px; color: #999; text-align: center;">
+                <p>You're receiving this because you subscribed to this newsletter.</p>
             </div>
+
         </body>
     </html>
     """
+
+def plain_text(body):
+    #Stripping html tags for plain text alternative
+    import re
+    return re.sub(r'<[^>]+>', '', body)
                 
 
 
@@ -43,15 +52,10 @@ def send_email(to, subject, body):
     msg["To"] = to
     msg["Subject"] = subject
 
-    #Plain text version -> Old email clients
-    plain = MIMEText(body, "plain")
-
-    #HTML version -> modern clients will see this
-    html = MIMEText(format_html(body), "html")
 
     #Plain first, HTML second
-    msg.attach(plain)
-    msg.attach(html)
+    msg.attach(MIMEText(plain_text(body), "plain"))
+    msg.attach(MIMEText(format_html(body), "html"))
 
     #Connect to Gmails SMTP server and send the email
     try:
